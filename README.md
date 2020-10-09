@@ -3,7 +3,7 @@
 A library to easily use the Chrome DevTools Protocol https://chromedevtools.github.io/devtools-protocol/
 
 ## Getting started
-To install InfiniSwiss.CdbSharp, run the following command in the [Package Manager Console](http://docs.nuget.org/docs/start-here/using-the-package-manager-console):
+To install InfiniSwiss.CdpSharp, run the following command in the [Package Manager Console](http://docs.nuget.org/docs/start-here/using-the-package-manager-console):
 
     PM> Install-Package InfiniSwiss.CdpSharp
 
