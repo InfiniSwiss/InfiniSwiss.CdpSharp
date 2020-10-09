@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	<TargetFramework>netstandard2.0</TargetFramework>
+	<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+	<LangVersion>8</LangVersion>
+	<Authors>InfiniSwiss</Authors>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	<Copyright>InfiniSwiss</Copyright>
+	<PackageProjectUrl>https://github.com/InfiniSwiss/InfiniSwiss.CdpSharp</PackageProjectUrl>
+	<PackageIcon>logo.png</PackageIcon>
+	<RepositoryUrl>https://github.com/InfiniSwiss/InfiniSwiss.CdpSharp</RepositoryUrl>
+	<RepositoryType>git</RepositoryType>
+	<PackageTags>Infiniswiss, CDP, Chromium, Chromium DevTools Protocol, Websocket</PackageTags>
+	<Description>A library to easily use the Chrome DevTools Protocol.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+	<None Include="..\..\logo.png">
+	  <Pack>True</Pack>
+	  <PackagePath></PackagePath>
+	</None>
+  </ItemGroup>
+
+  <ItemGroup>
+	<PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+	<PackageReference Include="Websocket.Client" Version="4.3.21" />
+  </ItemGroup>
+
+</Project>
