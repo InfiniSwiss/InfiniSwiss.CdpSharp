@@ -67,6 +67,12 @@ namespace InfiniSwiss.CdpSharp
                 return knownChromiumFilePath;
             }
 
+            var microsoftFolderChromiumPath = Directory.EnumerateFiles("C:\\Program Files (x86)\\Microsoft", "msedge.exe", SearchOption.AllDirectories).FirstOrDefault();
+            if (microsoftFolderChromiumPath != null)
+            {
+                return microsoftFolderChromiumPath;
+            }
+
             return Directory.EnumerateFiles("C:\\Program Files (x86)", "*.exe", SearchOption.AllDirectories)
                 .FirstOrDefault(path => path.Contains("msedge.exe") || path.Contains("chrome.exe"));
         }
