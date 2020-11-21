@@ -40,16 +40,19 @@ namespace InfiniSwiss.CdpSharp
 
         public async Task StartAsync()
         {
-            var chromiumPath = this.GetChromiumPath(options.ChromiumPath);
-            if (string.IsNullOrEmpty(chromiumPath) || !File.Exists(chromiumPath))
+            // If the remote chromium Url is not provided, we're trying to open a new process.
+            if (string.IsNullOrEmpty(options.RemoteChromiumUrl))
             {
-                throw new FileNotFoundException("Could not find either Edge or Chrome executable");
+                var chromiumPath = this.GetChromiumPath(options.ChromiumPath);
+                if (string.IsNullOrEmpty(chromiumPath) || !File.Exists(chromiumPath))
+                {
+                    throw new FileNotFoundException("Could not find either Edge or Chrome executable");
+                }
+
+                this.chromiumProcess = Process.Start(chromiumPath, $"{(this.options.RunHeadless ? "--headless" : string.Empty)} --remote-debugging-port={options.RemoteDebuggingPort}");
             }
-
-            this.chromiumProcess = Process.Start(chromiumPath, $"{(this.options.RunHeadless ? "--headless" : string.Empty)} --remote-debugging-port={options.RemoteDebuggingPort}");
-
             this.cdpCommunicator = new CdpCommunicator();
-            await this.cdpCommunicator.InitializeAsync(this.options.RemoteDebuggingPort);
+            await this.cdpCommunicator.InitializeAsync(options.RemoteChromiumUrl ?? "localhost", this.options.RemoteDebuggingPort, options.InitialUrl);
 
             this.Page = new CdpPageDomain(this.cdpCommunicator);
         }
@@ -81,7 +84,7 @@ namespace InfiniSwiss.CdpSharp
         private bool disposed;
         private Process chromiumProcess;
         private CdpCommunicator cdpCommunicator;
-        private readonly string[] knownChromiumPaths = 
+        private readonly string[] knownChromiumPaths =
         {
             "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
             "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"

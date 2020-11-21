@@ -7,6 +7,10 @@ namespace InfiniSwiss.CdpSharp
 
         public int RemoteDebuggingPort { get; set; } = 9222;
 
+        public string RemoteChromiumUrl { get; set; }
+
         public bool RunHeadless { get; set; }
+
+        public string InitialUrl = "about:blank";
     }
 }
