@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
+using InfiniSwiss.CdpSharp.Exceptions;
 using Newtonsoft.Json;
 using Websocket.Client;
 
@@ -11,16 +12,22 @@ namespace InfiniSwiss.CdpSharp.WebSocketCommunication
 {
     public class CdpCommunicator : IDisposable
     {
-        public async Task InitializeAsync(int remoteDebuggingPort)
+        public async Task InitializeAsync(string url, int remoteDebuggingPort, string initialUrl)
         {
-            var cdpListUrl = $"http://localhost:{remoteDebuggingPort}/json/list";
-            var cdpListResultJson = await new HttpClient().GetStringAsync(cdpListUrl);
-            var cdpListResult = JsonConvert.DeserializeAnonymousType(cdpListResultJson, new[] { new { webSocketDebuggerUrl = "" } });
+            // We open a new tab(in case the chromium is shared between multiple consumers, we'll have our own tab where we can navigate.
+            
+            var cdpNewUrl = $"http://{url}:{remoteDebuggingPort}/json/new?{initialUrl}";
+            var cdpResultJson = await new HttpClient().GetStringAsync(cdpNewUrl);
+            var cdpResult = JsonConvert.DeserializeAnonymousType(cdpResultJson, new { webSocketDebuggerUrl = "", id ="" });
 
-            var webSocketDebuggerUrl = cdpListResult?.FirstOrDefault()?.webSocketDebuggerUrl;
+            var webSocketDebuggerUrl = cdpResult?.webSocketDebuggerUrl;
+            this.targetId = cdpResult.id;
+            this.url = url;
+            this.remoteDebuggingPort = remoteDebuggingPort;
+
             if (string.IsNullOrEmpty(webSocketDebuggerUrl))
             {
-                throw new InvalidOperationException($"Could not read the chromium websocket debugger url from {cdpListUrl}");
+                throw new InvalidOperationException($"Could not read the chromium websocket debugger url from {cdpNewUrl}");
             }
 
             this.webSocket = new WebsocketClient(new Uri(webSocketDebuggerUrl));
@@ -81,7 +88,14 @@ namespace InfiniSwiss.CdpSharp.WebSocketCommunication
 
             if (disposing)
             {
+                var cdpCloseUrl = $"http://{url}:{remoteDebuggingPort}/json/close/{targetId}";
+                // we need also to close our tab
                 this.webSocket.Dispose();
+                var httpResult = new HttpClient().GetAsync(cdpCloseUrl).Result;
+                if (httpResult.StatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    throw new CloseChromiumTabException($"Cannot close chromium tab using url: {cdpCloseUrl}");
+                }
             }
 
             disposed = true;
@@ -133,5 +147,8 @@ namespace InfiniSwiss.CdpSharp.WebSocketCommunication
         private readonly Dictionary<string, List<Action>> eventHandlers = new Dictionary<string, List<Action>>();
         private WebsocketClient webSocket;
         private bool disposed;
+        private string targetId;
+        private string url;
+        private int remoteDebuggingPort;
     }
 }
