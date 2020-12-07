@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using InfiniSwiss.CdpSharp;
+using InfiniSwiss.CdpSharp.Commands.Page.Printing;
 
 namespace Demo
 {
@@ -10,7 +11,7 @@ namespace Demo
         static async Task Main(string[] args)
         {
             await RunWithExistingChromium();
-            await RunWithRemoteChromium();
+            //await RunWithRemoteChromium();
         }
 
         static async Task RunWithExistingChromium()
@@ -30,6 +31,8 @@ namespace Demo
 
             // Now that the navigation is complete print the page. The command returns the printed page as a base64 string.
             var pagePrintToPdfCommand = chromiumExecutionContext.Page.CreatePrintPdfCommand();
+            pagePrintToPdfCommand.DisplayHeaderFooter = true;
+            pagePrintToPdfCommand.FooterTemplate = CdpPagePrintPdfCommand.DefaultFooterTemplate;
             var base64Pdf = await pagePrintToPdfCommand.ExecuteAsync();
 
             // Save the file to disk
@@ -48,6 +51,8 @@ namespace Demo
 
             // Now that the navigation is complete print the page. The command returns the printed page as a base64 string.
             var pagePrintToPdfCommand = chromiumExecutionContext.Page.CreatePrintPdfCommand();
+            pagePrintToPdfCommand.DisplayHeaderFooter = true;
+            pagePrintToPdfCommand.FooterTemplate = CdpPagePrintPdfCommand.DefaultFooterTemplate;
             var base64Pdf = await pagePrintToPdfCommand.ExecuteAsync();
 
             // Save the file to disk
