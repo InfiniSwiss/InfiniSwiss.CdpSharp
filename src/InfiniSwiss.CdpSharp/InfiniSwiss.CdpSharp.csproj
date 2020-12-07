@@ -13,9 +13,9 @@
 	<RepositoryType>git</RepositoryType>
 	<PackageTags>Infiniswiss, CDP, Chromium, Chromium DevTools Protocol, Websocket</PackageTags>
 	<Description>A library to easily use the Chrome DevTools Protocol.</Description>
-	<Version>1.0.3</Version>
-	<AssemblyVersion>1.0.3.0</AssemblyVersion>
-	<FileVersion>1.0.3.0</FileVersion>
+	<Version>1.0.4</Version>
+	<AssemblyVersion>1.0.4.0</AssemblyVersion>
+	<FileVersion>1.0.4.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

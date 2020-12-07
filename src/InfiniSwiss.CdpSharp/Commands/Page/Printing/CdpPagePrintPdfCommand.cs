@@ -26,7 +26,8 @@ namespace InfiniSwiss.CdpSharp.Commands.Page.Printing
             var responseMessage = await Communicator.SendAsync("Page.printToPDF", new 
             {
                 displayHeaderFooter = DisplayHeaderFooter,
-                footerTemplate = FooterTemplate ?? string.Empty
+                headerTemplate = HeaderTemplate ?? "<div></div>",
+                footerTemplate = FooterTemplate ?? "<div></div>"
             });
 
             return base.GetDataFromCdpResponseMessage(responseMessage);
