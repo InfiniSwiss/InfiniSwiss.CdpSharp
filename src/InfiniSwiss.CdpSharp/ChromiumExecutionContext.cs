@@ -33,7 +33,10 @@ namespace InfiniSwiss.CdpSharp
                 this.cdpCommunicator.Dispose();
             }
 
-            this.chromiumProcess?.Kill();
+            if (!chromiumProcess.HasExited)
+            {
+                this.chromiumProcess?.Kill();
+            }
 
             disposed = true;
         }
